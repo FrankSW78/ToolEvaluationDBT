@@ -1,0 +1,35 @@
+/*
+    {{ config(materialized='view') }}
+
+    {%- set yaml_metadata -%}
+    source_model: 
+        'sources': 'VTEMP_LOCATION_PROTOTYPE'
+    ldts: 'creationdate'
+    rsrc: 'recordsource'
+    hashed_columns: 
+        hk_location_h:
+            - location
+            - are
+        hd_location_s:
+            is_hashdiff: true
+            columns:
+                - countryshort
+                - organization
+                - company
+    {%- endset -%}
+
+
+    {%- set metadata_dict = fromyaml(yaml_metadata) -%}
+
+    {%- set source_model = metadata_dict["source_model"] -%}
+    {%- set ldts = metadata_dict["ldts"] -%}
+    {%- set rsrc = metadata_dict["rsrc"] -%}
+    {%- set hashed_columns = metadata_dict["hashed_columns"] -%}
+
+    {% set metadata_dict = fromyaml(yaml_metadata) %}
+    {{ datavault4dbt.stage(source_model=source_model,
+                        ldts=ldts,
+                        rsrc=rsrc,
+                        hashed_columns=hashed_columns) }}
+
+                        */
